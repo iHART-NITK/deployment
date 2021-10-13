@@ -1,0 +1,83 @@
+# This is a basic workflow to help you get started with Actions
+name: "Azure Deployment Validation using Terraform"
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ master ]
+  pull_request:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "terraform"
+  terraform-plan:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: terraform
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: Terraform Setup
+        uses: hashicorp/setup-terraform@v1
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+      
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        
+      - name: Azure Login
+        run: az login -u ${{ secrets.AZURE_CLI_USERNAME }} -p ${{ secrets.AZURE_CLI_PASSWORD }}
+        
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate
+      
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color
+        env:
+          TF_VAR_aks_cluster_name: ${{ secrets.TF_VAR_aks_cluster_name }}
+          TF_VAR_azure_rg_location: ${{ secrets.TF_VAR_azure_rg_location }}
+          TF_VAR_azure_rg_name: ${{ secrets.TF_VAR_azure_rg_name }}
+          TF_VAR_django_secret_key: ${{ secrets.TF_VAR_django_secret_key }}
+          TF_VAR_mysql_db_name: ${{ secrets.TF_VAR_mysql_db_name }}
+          TF_VAR_mysql_password: ${{ secrets.TF_VAR_mysql_password }}
+          TF_VAR_mysql_username: ${{ secrets.TF_VAR_mysql_username }}
+          TF_VAR_registry_username: ${{ secrets.TF_VAR_registry_username }}
+          TF_VAR_registry_password: ${{ secrets.TF_VAR_registry_password }}
+          TF_VAR_container_location: ${{ secrets.TF_VAR_container_location }}
+          TF_VAR_mysql_db_port: ${{ secrets.TF_VAR_mysql_db_port }}
+        continue-on-error: true
+        
+      - uses: actions/github-script@v5
+        if: github.event_name == 'pull_request'
+        env:
+          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+            <details><summary>Show Plan</summary>
+            \`\`\`\n
+            ${process.env.PLAN}
+            \`\`\`
+            </details>
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
