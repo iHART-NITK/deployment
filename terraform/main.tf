@@ -1,4 +1,11 @@
 terraform {
+  backend "remote" {
+    hostname = "app.terraform.io"
+    organization = "iHART-NITK"
+    workspaces {
+      name = "prod"
+    }
+  }
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
