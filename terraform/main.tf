@@ -32,7 +32,6 @@ provider "kubernetes" {
 }
 
 # Resource Group to house all Azure Resources
-resource "azurerm_resource_group" "ihart_resource_group" {
+data "azurerm_resource_group" "ihart_resource_group" {
   name     = var.azure_rg_name
-  location = var.azure_rg_location
 }
