@@ -29,7 +29,7 @@ resource "kubernetes_deployment" "django_k8s_deployment" {
   }
 
   spec {
-    replicas = 3
+    replicas = 8
     selector {
       match_labels = {
         "app" = "iHART"
@@ -48,7 +48,7 @@ resource "kubernetes_deployment" "django_k8s_deployment" {
           image = var.container_location
           name  = "ihart-container"
           port {
-            container_port = 443
+            container_port = 80
           }
 
           env {
@@ -96,7 +96,7 @@ resource "kubernetes_service" "django_load_balancer" {
       "app" = kubernetes_deployment.django_k8s_deployment.metadata.0.labels.app
     }
     port {
-      port = 443
+      port = 80
     }
     type = "LoadBalancer"
   }

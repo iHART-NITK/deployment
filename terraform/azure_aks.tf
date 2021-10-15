@@ -12,7 +12,7 @@ resource "azurerm_kubernetes_cluster" "django_deployment_cluster" {
     enable_auto_scaling = false
     # min_count = 1
     # max_count = 32
-    node_count = 1
+    node_count = 2
   }
 
   identity {
