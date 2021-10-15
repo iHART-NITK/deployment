@@ -1,6 +1,6 @@
 terraform {
   backend "remote" {
-    hostname = "app.terraform.io"
+    hostname     = "app.terraform.io"
     organization = "iHART-NITK"
     workspaces {
       name = "prod"
@@ -33,5 +33,5 @@ provider "kubernetes" {
 
 # Resource Group to house all Azure Resources
 data "azurerm_resource_group" "ihart_resource_group" {
-  name     = var.azure_rg_name
+  name = var.azure_rg_name
 }

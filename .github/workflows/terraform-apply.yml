@@ -56,4 +56,4 @@ jobs:
         id: migrate
         run: |
           az aks get-credentials --resource-group ${{ secrets.TF_VAR_azure_rg_name }} --name ${{ secrets.TF_VAR_aks_cluster_name }}
-          kubectl exec $(kubectl get pods -o name) -- python /ihart_backend/manage.py migrate
+          kubectl exec $(kubectl get deployments -o name) -- python /ihart_backend/manage.py migrate
