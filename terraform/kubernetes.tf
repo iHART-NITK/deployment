@@ -48,7 +48,7 @@ resource "kubernetes_deployment" "django_k8s_deployment" {
           image = var.container_location
           name  = "ihart-container"
           port {
-            container_port = 80
+            container_port = 443
           }
 
           env {
