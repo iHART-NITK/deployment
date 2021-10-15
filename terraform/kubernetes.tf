@@ -29,7 +29,7 @@ resource "kubernetes_deployment" "django_k8s_deployment" {
   }
 
   spec {
-    replicas = 1
+    replicas = 3
     selector {
       match_labels = {
         "app" = "iHART"
@@ -48,7 +48,7 @@ resource "kubernetes_deployment" "django_k8s_deployment" {
           image = var.container_location
           name  = "ihart-container"
           port {
-            container_port = 80
+            container_port = 443
           }
 
           env {
@@ -72,7 +72,7 @@ resource "kubernetes_deployment" "django_k8s_deployment" {
             value = var.mysql_db_name
           }
           env {
-            name = "DATABASE_PORT"
+            name  = "DATABASE_PORT"
             value = var.mysql_db_port
           }
         }
@@ -96,7 +96,7 @@ resource "kubernetes_service" "django_load_balancer" {
       "app" = kubernetes_deployment.django_k8s_deployment.metadata.0.labels.app
     }
     port {
-      port = 8000
+      port = 443
     }
     type = "LoadBalancer"
   }
