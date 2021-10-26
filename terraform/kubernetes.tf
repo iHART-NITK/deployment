@@ -73,6 +73,10 @@ resource "kubernetes_deployment" "django_k8s_deployment" {
             value = var.django_secret_key
           }
           env {
+            name = "DJANGO_SUPERUSER_PASSWORD"
+            value = var.django_superuser_password
+          }
+          env {
             name  = "DATABASE_HOST"
             value = azurerm_mysql_server.ihart_mysql_server.fqdn
           }

@@ -44,6 +44,11 @@ variable "django_secret_key" {
   type = string
 }
 
+# Superuser account password
+variable "django_superuser_password" {
+  type = string
+}
+
 # Username to access the GitHub Container Registry (GHCR) to fetch the Docker Container Image containing the Django Application
 variable "registry_username" {
   type = string

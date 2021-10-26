@@ -49,6 +49,7 @@ jobs:
           TF_VAR_aks_cluster_name: ${{ secrets.TF_VAR_aks_cluster_name }}
           TF_VAR_azure_rg_name: ${{ secrets.TF_VAR_azure_rg_name }}
           TF_VAR_django_secret_key: ${{ secrets.TF_VAR_django_secret_key }}
+          TF_VAR_django_superuser_password: ${{ secrets.TF_VAR_django_superuser_password }}
           TF_VAR_mysql_db_name: ${{ secrets.TF_VAR_mysql_db_name }}
           TF_VAR_mysql_password: ${{ secrets.TF_VAR_mysql_password }}
           TF_VAR_mysql_username: ${{ secrets.TF_VAR_mysql_username }}
