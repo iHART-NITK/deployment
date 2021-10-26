@@ -34,7 +34,7 @@ jobs:
         run: terraform init
         
       - name: Azure Login
-        run: az login -u ${{ secrets.AZURE_CLI_USERNAME }} -p ${{ secrets.AZURE_CLI_PASSWORD }}
+        run: az login -u ${{ secrets.AZURE_CLI_USERNAME }} -p ${{ secrets.AZURE_CLI_PASSWORD }} --output none
       
       - name: Terraform Apply
         id: apply
