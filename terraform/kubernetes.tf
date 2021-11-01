@@ -64,7 +64,7 @@ resource "kubernetes_deployment" "django_k8s_deployment" {
           image = var.container_location
           name  = "ihart-container"
           port {
-            container_port = 80
+            container_port = 443
           }
 
           # Environment variables within the container
@@ -124,7 +124,7 @@ resource "kubernetes_service" "django_load_balancer" {
 
     # This service will target port 80 on all selected pods
     port {
-      port = 80
+      port = 443
     }
 
     # This service is a load balancer service
