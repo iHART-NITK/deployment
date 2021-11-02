@@ -39,7 +39,7 @@ resource "kubernetes_deployment" "django_k8s_deployment" {
   # Deployment specifications
   spec {
     # Number of replicas in total, these will be equally divided in the node pool
-    replicas = 2
+    replicas = 4
 
     # Selector is used to match Pod labels to manage
     selector {
@@ -64,7 +64,7 @@ resource "kubernetes_deployment" "django_k8s_deployment" {
           image = var.container_location
           name  = "ihart-container"
           port {
-            container_port = 443
+            container_port = 80
           }
 
           # Environment variables within the container
@@ -124,7 +124,7 @@ resource "kubernetes_service" "django_load_balancer" {
 
     # This service will target port 80 on all selected pods
     port {
-      port = 443
+      port = 80
     }
 
     # This service is a load balancer service
